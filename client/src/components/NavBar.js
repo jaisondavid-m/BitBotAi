@@ -15,7 +15,6 @@ function NavBar() {
           <SiVowpalwabbit className="w-7 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14" />
           <h1 className="text-2xl lg:text-5xl mt-1 font-bold tracking-tight font-mono">BIT-AI</h1>
         </div>
-
         <div className='hidden lg:flex gap-8 font-bold text-2xl'>
           <p>PROFILE</p>
           <p>ABOUT</p>
