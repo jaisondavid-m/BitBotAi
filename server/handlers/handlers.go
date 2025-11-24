@@ -2,6 +2,7 @@
 
 	import (
 		"library/storage"
+		"library/models"
 
 		"context"
 		"fmt"
@@ -15,16 +16,21 @@
 
 
 	func UploadText(c *gin.Context){
-		var body struct{
-			Text string `json:"text"`
-		}
+		// var body struct{
+		// 	Text string `json:"text"`
+		// }
+		var body models.Body
 
-		if err := c.BindJSON(&body); err !=nil{
-			c.JSON(400,gin.H{"error":"Invalid Format"})
+		if err := c.BindJSON(&body); err != nil {
+			c.JSON(400, gin.H{"error": "Invalid request body"})
 			return
 		}
 
-		storage.SavedText=body.Text
+		if err := storage.SaveMaterial(body.Text); err != nil {
+			c.JSON(500, gin.H{"error": "DB Error: Could not store"})
+			return
+		}
+		
 		c.JSON(200,gin.H{"message":"material Uploaded Successfully"})
 	}
 
@@ -37,13 +43,12 @@
 			c.JSON(400, gin.H{"error": "Invalid Format"})
 			return
 		}
-		if storage.SavedText==""{
-			c.JSON(http.StatusBadRequest,gin.H{"error":"No study Material is Uploaded"})
+		text, err := storage.GetMaterial()
+		if err != nil || text == "" {
+			c.JSON(400, gin.H{"error": "No study material is uploaded"})
 			return
 		}
 		apikey:=os.Getenv("GEMINI_API_KEY")
-		fmt.Println("API KEY:", apikey)
-
 
 		ctx := context.Background()
 		client,err :=genai.NewClient(ctx , option.WithAPIKey(apikey))
@@ -54,15 +59,28 @@
 
 		model := client.GenerativeModel("gemini-2.5-flash")
 
-		prompt := fmt.Sprintf(`
-							You are an educational assistant.
-							Answer ONLY using the following study material:
-							%s
-							student Question:%s
+	prompt := fmt.Sprintf(`
+		You are an educational AI assistant.
 
-							if the answer is not in the material , respond:
-							"😔we have not trained this model to answer this Questions"
-							`,storage.SavedText,body.Question)
+		RULES:
+		1. You must ALWAYS prioritize using the uploaded study material as the source of truth.
+		2. If the user question is academic (school/college subjects like science, math, history, computer science, biology, chemistry, geography, etc.) AND the study material does not contain the answer, THEN you are allowed to search the internet and answer correctly.
+		3. If the question is NOT related to education or academics (examples: gaming, money, hacking, cheating, entertainment, personal questions, illegal questions), you MUST reply:
+		"❌ This question is not related to education. I can answer only academic questions."
+
+		STUDY MATERIAL:
+		%s
+
+		USER QUESTION:
+		%s
+
+		Remember:
+		- Always check if the question is educational.
+		- If educational → answer using material; if missing → use internet.
+		- If not educational → refuse.
+	`, text, body.Question)
+
+
 
 		resp,err:= model.GenerateContent(ctx,genai.Text(prompt))
 		if err!=nil{
