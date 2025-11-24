@@ -10,10 +10,22 @@ func SaveMaterial(text string) error {
 	return err
 }
 
-func GetMaterial() (string,error){
-	row := config.DB.QueryRow("SELECT content FROM study_material ORDER BY id DESC LIMIT 1")
+func GetMaterial() ([]string,error){
+	rows,err := config.DB.Query("SELECT content FROM study_material")
 
-	var material string
-	err := row.Scan(&material)
-	return material,err
+	if err!=nil{
+		return nil,err
+	}
+
+	defer rows.Close()
+
+	var materials []string
+	for rows.Next() {
+		var m string
+		if err := rows.Scan(&m); err != nil {
+			return nil, err
+		}
+		materials = append(materials, m)
+	}
+	return materials,err
 }

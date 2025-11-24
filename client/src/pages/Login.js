@@ -28,16 +28,17 @@ function Login() {
     }
 
   return (
-   <div className='flex justify-center items-center bg-[#D78FEE] h-screen text-center'>
-        <div className=' bg-[#9B5DE0] rounded-2xl h-max w-max p-10'>
+   <div className='flex justify-center items-center bg-[#1c1c1c] h-screen text-center'>
+    <img src="/panda.png" className="absolute -top-0 pt-5 left-1/2 -translate-x-1/2 w-28" alt="panda"/>
+        <div className='mt-10 bg-[#101012] relative rounded-2xl h-max w-max p-10'>
           <form onSubmit={handleLogin} className='flex flex-col gap-y-5 text-center w-max'>
-            <input className='p-3 rounded-xl' type='email' value={email} placeholder='Enter Your Email' onChange={(e)=>setEmail(e.target.value)}/>
-            <input className='p-3 rounded-xl' type='password' value={password} placeholder='Enter Your Password' onChange={(e)=>setPassword(e.target.value)}/>
-            <button className='bg-purple-950 text-white font-bold w-max px-4 py-2 rounded-xl mx-auto' type='submit'>{loading?"Logging In .." :"LogIn"}</button>
+            <input className='p-3 border text-white bg-[#0e0e0f] rounded-xl' type='email' value={email} placeholder='Enter Your Email' onChange={(e)=>setEmail(e.target.value)}/>
+            <input className='p-3 border text-white bg-[#0e0e0f] rounded-xl' type='password' value={password} placeholder='Enter Your Password' onChange={(e)=>setPassword(e.target.value)}/>
+            <button className='bg-[#000000] text-white font-bold w-max px-4 py-2 rounded-xl mx-auto' type='submit'>{loading?"Logging In .." :"LogIn"}</button>
           </form>
           <div className='mt-5 text-white flex flex-col gap-y-2'>
             <p>Did not Have an account ?</p>
-            <Link to="/register" className='text-purple-950 font-bold underline'>Create an Account</Link>
+            <Link to="/register" className=' font-bold underline'>Create an Account</Link>
           </div>
         </div>
     </div>

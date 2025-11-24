@@ -6,6 +6,7 @@ function RoleDecider() {
     const token = localStorage.getItem("token");
     const decode = jwtDecode(token)
     const role = decode.role;
+    localStorage.setItem("name",decode.name);
     
     if(!token) return <Navigate to="/login" />;
     if (role === "admin") return <Navigate to="/admin" />;

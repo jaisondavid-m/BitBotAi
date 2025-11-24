@@ -19,9 +19,10 @@ func Protected() gin.HandlerFunc{
 			return
 		}
 
-		token,err:=jwt.Parse(tokenstring,func (token *jwt.Token)(interface{},error){
-			return jwtKey,nil
+		token, err := jwt.Parse(tokenstring, func(token *jwt.Token) (interface{}, error) {
+			return jwtKey, nil
 		})
+
 
 		if err!=nil || !token.Valid{
 			c.JSON(http.StatusUnauthorized,gin.H{"error":"Invalid or Expired Token"})

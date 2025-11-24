@@ -3,6 +3,8 @@
 	import (
 		"library/storage"
 		"library/models"
+		"strings"
+
 
 		"context"
 		"fmt"
@@ -16,9 +18,7 @@
 
 
 	func UploadText(c *gin.Context){
-		// var body struct{
-		// 	Text string `json:"text"`
-		// }
+
 		var body models.Body
 
 		if err := c.BindJSON(&body); err != nil {
@@ -43,11 +43,19 @@
 			c.JSON(400, gin.H{"error": "Invalid Format"})
 			return
 		}
-		text, err := storage.GetMaterial()
-		if err != nil || text == "" {
+		// text, err := storage.GetMaterial()
+		// if err != nil || text == "" {
+		// 	c.JSON(400, gin.H{"error": "No study material is uploaded"})
+		// 	return
+		// }
+		materials, err := storage.GetMaterial()
+		if err != nil || len(materials) == 0 {
 			c.JSON(400, gin.H{"error": "No study material is uploaded"})
 			return
 		}
+
+		// ⬅️ JOIN all rows into a single text
+		allText := strings.Join(materials, "\n\n")
 		apikey:=os.Getenv("GEMINI_API_KEY")
 
 		ctx := context.Background()
@@ -78,7 +86,7 @@
 		- Always check if the question is educational.
 		- If educational → answer using material; if missing → use internet.
 		- If not educational → refuse.
-	`, text, body.Question)
+	`, allText, body.Question)
 
 
 
