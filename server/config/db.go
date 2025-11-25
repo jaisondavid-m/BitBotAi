@@ -1,21 +1,42 @@
 package config
 
 import (
-	"database/sql"
+	"context"
+	"fmt"
 	"log"
+	"os"
+	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var DB *sql.DB
-func Connect(){
-	var err error
-	DB,err = sql.Open("mysql","root:MySqlJaison007@@tcp(localhost:3306)/bitbotai")
-	if err!=nil{
-		log.Fatal(err)
+var Mongo *mongo.Database
+
+func ConnectMongo() {
+	uri := os.Getenv("MONGO_URI")
+	dbName := os.Getenv("MONGO_DB")
+
+	if uri == "" {
+		log.Fatal("❌ MONGO_URI missing in .env")
 	}
-	if err=DB.Ping();err !=nil{
-		log.Fatal("Failed to connect to database",err)
+	if dbName == "" {
+		log.Fatal("❌ MONGO_DB missing in .env")
 	}
-	log.Println("DB connected successfully")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
+	if err != nil {
+		log.Fatal("❌ MongoDB connection failed:", err)
+	}
+
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		log.Fatal("❌ Could not ping MongoDB:", err)
+	}
+
+	Mongo = client.Database(dbName)
+	fmt.Println("✅ MongoDB connected successfully")
 }

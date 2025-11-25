@@ -1,31 +1,48 @@
 package storage
 
 import (
+	"context"
 	"library/config"
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
+type Material struct {
+	Content string `bson:"content"`
+}
 
 func SaveMaterial(text string) error {
-	_,err:=config.DB.Exec("INSERT INTO study_material (content) VALUES (?)",text)
+	collection := config.Mongo.Collection("study_material")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := collection.InsertOne(ctx, bson.M{
+		"content": text,
+	})
 	return err
 }
 
-func GetMaterial() ([]string,error){
-	rows,err := config.DB.Query("SELECT content FROM study_material")
+func GetMaterial() ([]string, error) {
+	collection := config.Mongo.Collection("study_material")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-	if err!=nil{
-		return nil,err
+	cursor, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
 	}
+	defer cursor.Close(ctx)
 
-	defer rows.Close()
+	var result []string
 
-	var materials []string
-	for rows.Next() {
-		var m string
-		if err := rows.Scan(&m); err != nil {
+	for cursor.Next(ctx) {
+		var doc Material
+		if err := cursor.Decode(&doc); err != nil {
 			return nil, err
 		}
-		materials = append(materials, m)
+		result = append(result, doc.Content)
 	}
-	return materials,err
+
+	return result, nil
 }

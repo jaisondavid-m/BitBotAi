@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"library/config"
+	"library/storage"
 	"library/models"
 	"net/http"
 	"time"
@@ -15,20 +15,20 @@ var jwtKey=[]byte("It_is_not_a_secret_key_but_a_secret_key")
 
 func Login(c *gin.Context){
 	var input models.LoginInput
-	if err:=c.ShouldBindJSON(&input); err!=nil{
-		c.JSON(http.StatusBadRequest,gin.H{"error":err.Error()})
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-	var user models.User
-	err:=config.DB.QueryRow("SELECT name,email,role,password FROM users WHERE email=(?)",input.Email).Scan(&user.Name,&user.Email,&user.Role,&user.Password);
 
-	if err!=nil{
-		c.JSON(http.StatusUnauthorized,gin.H{"error":"Invalid Email"})
+	user, err := storage.FindUserByEmail(input.Email)
+	if err != nil {
+		c.JSON(401, gin.H{"error": "Invalid Email"})
 		return
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password),[]byte(input.Password))
-	if err!=nil{
-		c.JSON(http.StatusUnauthorized,gin.H{"error":"Invalid Password"})
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
+	if err != nil {
+		c.JSON(401, gin.H{"error": "Invalid Password"})
 		return
 	}
 
@@ -53,31 +53,33 @@ func Login(c *gin.Context){
 	})
 }
 
-func Register(c *gin.Context){
+func Register(c *gin.Context) {
 	var input models.RegisterInput
-	if err:= c.ShouldBindJSON(&input); err!=nil{
-		c.JSON(http.StatusBadRequest,gin.H{"error":err.Error()})
-		return
-	}
-	
-	var existingUser string
-	err := config.DB.QueryRow("SELECT email from users where email = (?)",input.Email).Scan(&existingUser)
-	if err==nil{
-		c.JSON(http.StatusBadRequest,gin.H{"error":"User Already Exists"})
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	hashedpassword,err := bcrypt.GenerateFromPassword([]byte(input.Password),bcrypt.DefaultCost)
-
-	if err!=nil{
-		c.JSON(http.StatusInternalServerError,gin.H{"error":"Server Error"})
+	// check email exists
+	_, err := storage.FindUserByEmail(input.Email)
+	if err == nil {
+		c.JSON(400, gin.H{"error": "User Already Exists"})
 		return
 	}
 
-	_,err = config.DB.Exec("INSERT INTO users (name,email,role,password) VALUES (?,?,?,?)",input.Name,input.Email,"user",string(hashedpassword))
-	if err != nil{
-		c.JSON(http.StatusInternalServerError,gin.H{"error":"Failed To Register"})
+	hash, _ := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+
+	user := models.User{
+		Name:     input.Name,
+		Email:    input.Email,
+		Role:     "user",
+		Password: string(hash),
+	}
+
+	if err := storage.CreateUser(user); err != nil {
+		c.JSON(500, gin.H{"error": "Failed To Register"})
 		return
 	}
-	c.JSON(http.StatusOK,gin.H{"messsage":"Registered Successfully"})
+
+	c.JSON(200, gin.H{"message": "Registered Successfully"})
 }

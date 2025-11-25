@@ -6,10 +6,13 @@ import (
 
 	"github.com/joho/godotenv"
 )
-func main(){
+
+func main() {
 	godotenv.Load()
-	config.Connect()
-	defer config.DB.Close()
-	r:=routes.SetUpRouter()
+
+	// Connect to MongoDB (NEW)
+	config.ConnectMongo()
+
+	r := routes.SetUpRouter()
 	r.Run(":8000")
 }

@@ -4,10 +4,10 @@ import "github.com/golang-jwt/jwt/v5"
 
 
 type User struct{
-	Name			string		`json:"name"`
-	Email			string		`json:"email"`
-	Password		string		`json:"password"`
-	Role			string		`json:"role"`
+	Name			string		`bson:"name"`
+	Email			string		`bson:"email"`
+	Password		string		`bson:"password"`
+	Role			string		`bson:"role"`
 }
 type RegisterInput struct{
 	Name			string		`json:"name"`
