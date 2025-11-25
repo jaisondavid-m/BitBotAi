@@ -22,7 +22,6 @@ function Register() {
             }
     }
   }
-
   return (
     <div className='flex justify-center items-center bg-[#1c1c1c] h-screen text-center'>
        <div className=' bg-[#101012] rounded-2xl h-max w-max p-10'>

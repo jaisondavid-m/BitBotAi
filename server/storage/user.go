@@ -9,7 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// ------------------ FIND USER BY EMAIL ------------------
 func FindUserByEmail(email string) (*models.User, error) {
 	collection := config.Mongo.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -20,7 +19,6 @@ func FindUserByEmail(email string) (*models.User, error) {
 	return &user, err
 }
 
-// ------------------ CREATE USER ------------------
 func CreateUser(user models.User) error {
 	collection := config.Mongo.Collection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
