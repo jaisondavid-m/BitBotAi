@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const api = axios.create({
-    baseURL:"http://localhost:8000",
+    baseURL:"https://bitbotai.onrender.com",
 });
 
 api.interceptors.request.use((req) => {
