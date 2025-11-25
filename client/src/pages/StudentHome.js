@@ -43,13 +43,13 @@ function StudentHome() {
       )}
       </div>
       <div className="fixed bottom-0 left-0 w-full bg-black pb-3 px-4">
-        <div className="relative max-w-2xl mx-auto flex items-center">
-          <input type="text" value={question} placeholder="Ask your question..." onChange={(e) => setQuestion(e.target.value)}
+        <form onSubmit={askQuestion} className="relative max-w-2xl mx-auto flex items-center">
+          <input type="text" value={question} required placeholder="Ask your question..." onChange={(e) => setQuestion(e.target.value)}
             className="w-full h-12 rounded-full px-4 bg-[#1b1b1e] placeholder-gray-500"/>
-          <button onClick={askQuestion} className="absolute right-1 scale-105 bg-white  p-3 rounded-full transition">
+          <button type='submit' className="absolute right-0.5 scale-105 bg-white  p-3 rounded-full transition">
             {loading?<CiStop1 size={20} className='text-black'/>:<LuArrowUp className="text-black" size={20}/>}
           </button>
-        </div>
+        </form>
       </div>
     </div>
 

@@ -23,7 +23,6 @@ func Protected() gin.HandlerFunc{
 			return jwtKey, nil
 		})
 
-
 		if err!=nil || !token.Valid{
 			c.JSON(http.StatusUnauthorized,gin.H{"error":"Invalid or Expired Token"})
 			c.Abort()
@@ -57,7 +56,6 @@ func IsAdmin() gin.HandlerFunc{
 			c.Abort()
 			return 
 		}
-
 		c.Next()
 	}
 }
