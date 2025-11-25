@@ -77,10 +77,10 @@
 					============================
 
 					1️⃣ **Check the uploaded study material first.**  
-					- If the answer is found in the material, reply using ONLY that information.
+					- If the answer is found in the material, reply using information.
 
 					2️⃣ **If the answer is NOT found in the material:**
-					- Check ONLY the trusted academic source:
+					- Check  the trusted academic and rules and teacher details source:
 						- https://www.bitsathy.ac.in/
 						- Information about Bannari Amman Institute of Technology
 
