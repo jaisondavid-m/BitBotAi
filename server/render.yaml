@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: bitbotai
+    env: go
+    buildCommand: go build -o app
+    startCommand: ./app
+    envVars:
+      - key: GO_VERSION
+        value: "1.25.4"
