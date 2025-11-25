@@ -28,7 +28,7 @@ function Register() {
        <div className=' bg-[#101012] rounded-2xl h-max w-max p-10'>
         <form onSubmit={handleRegister}  className='flex flex-col gap-y-5 text-center w-max'>
             <input className='p-3 border rounded-xl text-white bg-[#0e0e0f]' type='text' value={name} placeholder='Enter the Name' onChange={(e)=>setName(e.target.value)}/>
-            <input className='p-3 border rounded-xl text-white bg-[#0e0e0f]' type='text' value={email} placeholder='Set Your Email' onChange={(e)=>setEmail(e.target.value)}/>
+            <input className='p-3 border rounded-xl text-white bg-[#0e0e0f]' type='email' value={email} placeholder='Set Your Email' onChange={(e)=>setEmail(e.target.value)}/>
             <input className='p-3 border rounded-xl text-white bg-[#0e0e0f]' type='password' value={password} placeholder='Set Your Password' onChange={(e)=>setPassword(e.target.value)}/>
             <button className='bg-[#000000] text-white font-bold w-max px-4 py-2 rounded-xl mx-auto' type='submit'>Register</button>
         </form>

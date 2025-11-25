@@ -43,18 +43,19 @@
 			c.JSON(400, gin.H{"error": "Invalid Format"})
 			return
 		}
+
 		// text, err := storage.GetMaterial()
 		// if err != nil || text == "" {
 		// 	c.JSON(400, gin.H{"error": "No study material is uploaded"})
 		// 	return
 		// }
+		
 		materials, err := storage.GetMaterial()
 		if err != nil || len(materials) == 0 {
 			c.JSON(400, gin.H{"error": "No study material is uploaded"})
 			return
 		}
 
-		// ⬅️ JOIN all rows into a single textw
 		allText := strings.Join(materials, "\n\n")
 		apikey:=os.Getenv("GEMINI_API_KEY")
 
@@ -90,7 +91,7 @@
 					4️⃣ **If still not found from all sources:**
 					- Reply: "Information not available."
 
-					5️⃣ **If the question is NOT related to academics (science, maths, history, geography, computer science, biology, chemistry, college syllabus, etc.):**
+					5️⃣ **If the question is NOT related to academics**
 					- Reply: "❌ This question is not related to education. I can answer only academic questions."
 
 					============================
