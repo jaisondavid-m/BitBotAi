@@ -54,7 +54,7 @@
 			return
 		}
 
-		// ⬅️ JOIN all rows into a single text
+		// ⬅️ JOIN all rows into a single textw
 		allText := strings.Join(materials, "\n\n")
 		apikey:=os.Getenv("GEMINI_API_KEY")
 
