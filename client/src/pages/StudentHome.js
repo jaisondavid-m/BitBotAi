@@ -30,7 +30,7 @@ function StudentHome() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
       <NavBar />
-      <h3 className="text-xl mt-16 font-semibold mb-2 text-center underline ">{showquestion}</h3>
+      <h3 className="text-4xl font-bold mt-16  mb-2 text-center  ">{showquestion}</h3>
       <div className="flex-1 px-4 py-6 overflow-y-auto">
         {loading ? (<div className="animate-pulse space-y-3 mt-5 lg:w-[50%] mx-auto">
                         <div className="h-4 bg-gray-700 rounded w-3/4"></div>
@@ -39,7 +39,7 @@ function StudentHome() {
                         <div className="h-4 bg-gray-700 rounded w-5/6"></div>
                     </div>
       ) : (
-        <p className="lg:w-[50%] mx-auto text-gray-300 pb-20"><pre className="whitespace-pre-wrap break-words">{answer}</pre></p>
+        <p className="lg:w-[50%] mx-auto text-mono text-2xl text-gray-300 pb-20"><pre className="whitespace-pre-wrap break-words">{answer}</pre></p>
       )}
       </div>
       <div className="fixed bottom-0 left-0 w-full bg-black pb-3 px-4">
