@@ -58,8 +58,8 @@ function Register() {
 
         {step <= 3 && (
           <form onSubmit={handleNext} className="flex flex-col gap-y-5">
-            <input className="p-3 border rounded-xl text-white bg-[#0e0e0f]" type={step === 3 ? "password" : "text"} placeholder={step === 1 ? "Your Name" : step === 2 ? "Your Email" : "Your Password"}
-                  value={input} onChange={(e) => setInput(e.target.value)} required/>
+            <input required className="p-3 border rounded-xl text-white bg-[#0e0e0f]" type={step === 3 ? "password" : "text"} placeholder={step === 1 ? "Your Name" : step === 2 ? "Your Email" : "Your Password"}
+                  value={input} onChange={(e) => setInput(e.target.value)} />
 
             <button className="bg-black text-white font-bold px-4 py-2 rounded-xl mx-auto" type="submit">Next →</button>
           </form>
