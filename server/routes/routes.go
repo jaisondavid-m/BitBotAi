@@ -19,7 +19,8 @@ func SetUpRouter() *gin.Engine{
 
 	r.POST("/login",handlers.Login)
 	r.POST("/register",handlers.Register)
-	r.POST("/ask",middlewares.Protected(),handlers.AskQuestions)
+	// r.POST("/ask",middlewares.Protected(),handlers.AskQuestions)
+	r.POST("/ask",handlers.AskQuestions)
 	r.POST("/upload",middlewares.Protected(),middlewares.IsAdmin(),handlers.UploadText)
 	return r
 }
