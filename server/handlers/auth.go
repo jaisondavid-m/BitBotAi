@@ -11,7 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtKey=[]byte("It_is_not_a_secret_key_but_a_secret_key")
+var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
 func Login(c *gin.Context){
 	var input models.LoginInput
